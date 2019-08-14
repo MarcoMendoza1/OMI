@@ -1,24 +1,24 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+ 
 int n,m,t,s,cont;
 bool pt[1024003];
-
+ 
 char lz[2048013];
 int st[2048013];
-
+ 
 //0 Barbary, 1 Buccaneer
-
+ 
 int init(int nodo, int ini,int fn){
 	if(ini==fn){
 		return st[nodo]=pt[ini];
 	 
 	}
-
+ 
 	return st[nodo]=init(nodo*2,ini,(fn+ini)/2)+init(nodo*2+1,(ini+fn)/2+1,fn);
-
+ 
 }
-
+ 
 void checaLazy(int nodo,char op){
 	if(lz[nodo]=='0'){
 		lz[nodo]=op;
@@ -44,7 +44,7 @@ void checaLazy(int nodo,char op){
 	}
 	
 }
-
+ 
 void lzy(int nodo,int ini,int fn,int x,int y,char op){
 	if(ini>=x && fn<=y){
 		checaLazy(nodo,op);
@@ -57,9 +57,9 @@ void lzy(int nodo,int ini,int fn,int x,int y,char op){
 	
 	lzy(nodo*2,ini,(ini+fn)/2,x,y,op);
 	lzy(nodo*2+1,(ini+fn)/2+1,fn,x,y,op);
-
+ 
 }
-
+ 
 int query(int nodo,int ini,int fn,int x,int y){
 	if(lz[nodo]!='0'){
 		if(lz[nodo]=='F'){
@@ -94,11 +94,17 @@ int query(int nodo,int ini,int fn,int x,int y){
 		
 	}
 	
-	return query(nodo*2,ini,(ini+fn)/2,x,y)+query(nodo*2+1,(ini+fn)/2+1,fn,x,y);
+	int res=query(nodo*2,ini,(ini+fn)/2,x,y)+query(nodo*2+1,(ini+fn)/2+1,fn,x,y);
 	
-
+	if(ini!=fn){
+		st[nodo]=st[nodo*2]+st[nodo*2+1];
+		
+	}
+	
+	return res;
+	
 }
-
+ 
 int main() {
 	cin>>t;
 	
@@ -107,7 +113,7 @@ int main() {
 	
 	int aux1,aux2;
 	for(int q=1;q<=t;q++){
-		cont=1;
+		cont=0;
 		cin>>m;
 		
 		n=0;
@@ -117,16 +123,17 @@ int main() {
 			n+=aux.size()*m;
 			
 			for(int j=1;j<=s;j++){
-				for(char a:aux){
-					pt[cont++]=a-'0';
+				for(int a=0;a<aux.size();a++){
+					pt[cont++]=aux[a]-'0';
 					
 				}
 				
 			}
 			
 		}
+		init(1,0,n-1);
 		
-		for(int i=1;i<=n;i++){
+		for(int i=0;i<2048011;i++){
 			lz[i]='0';
 			
 		}
@@ -140,10 +147,10 @@ int main() {
 			cin>>tipo>>aux1>>aux2;
 			
 			if(tipo!='S'){
-				lzy(1,1,n,aux1,aux2,tipo);
+				lzy(1,0,n-1,aux1,aux2,tipo);
 				
 			}else{
-				cout<<"Q"<<cont++<<": "<<query(1,1,n,aux1,aux2)<<'\n';
+				cout<<"Q"<<cont++<<": "<<query(1,0,n-1,aux1,aux2)<<'\n';
 				
 			}
 			
