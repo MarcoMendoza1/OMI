@@ -28,6 +28,7 @@ int dijk(){
 
         if(!vis[act.piso][act.elv]){
             vis[act.piso][act.elv]=true;
+            //cout<<act.piso<<" "<<act.tmp<<endl;
 
             if(act.piso==k){
                 return act.tmp;
@@ -36,7 +37,7 @@ int dijk(){
 
             for(int i=1;i<=n;i++){
                 if(gr[act.piso][i] && i!=act.elv){
-                    mont.push({act.piso,i,act.piso+60});
+                    mont.push({act.piso,i,act.tmp+60});
 
                 }
 
@@ -44,7 +45,7 @@ int dijk(){
 
             for(int i=0;i<=100;i++){
                 if(i!=act.piso && gr[i][act.elv]){
-                    mont.push({i,act.elv,abs(i-act.piso)*t[act.elv]});
+                    mont.push({i,act.elv,act.tmp+abs(i-act.piso)*t[act.elv]});
 
                 }
 
@@ -84,6 +85,7 @@ int main(){
         }
 
         for(int i=1;i<=n;i++){
+        	if(i==1)
             getline(cin,aux);
             getline(cin,aux);
 
@@ -106,6 +108,17 @@ int main(){
             }
 
         }
+        
+        /*for(int i=0;i<=13;i++){
+        	cout<<i<<" ";
+        	for(int j=1;j<=2;j++){
+        		cout<<gr[i][j]<<" ";
+        		
+        	}
+        	
+        	cout<<endl;
+        	
+        }*/
 
         for(int i=1;i<=n;i++){
             if(gr[0][i]){
@@ -117,6 +130,8 @@ int main(){
 
         int res;
         res=dijk();
+        
+        //cout<<res<<endl;
 
         if(res!=-1){
             cout<<res<<'\n';
