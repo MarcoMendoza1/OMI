@@ -48,6 +48,7 @@ void checaLazy(int nodo,char op){
 void lzy(int nodo,int ini,int fn,int x,int y,char op){
 	if(ini>=x && fn<=y){
 		checaLazy(nodo,op);
+		cout<<ini<<" "<<fn<<" "<<st[nodo]<<endl;
 		return;
 	 
 	}else if(fn<x || ini>y){
@@ -62,6 +63,7 @@ void lzy(int nodo,int ini,int fn,int x,int y,char op){
  
 int query(int nodo,int ini,int fn,int x,int y){
 	if(lz[nodo]!='0'){
+		cout<<ini<<" "<<fn<<" "<<st[nodo]<<" "<<lz[nodo]<<" ";
 		if(lz[nodo]=='F'){
 			st[nodo]=fn-ini+1;
 		
@@ -82,8 +84,13 @@ int query(int nodo,int ini,int fn,int x,int y){
 			
 		}
 		
+		cout<<st[nodo]<<endl;
+		
 		lz[nodo]='0';
 	
+	}else{
+		cout<<ini<<" "<<fn<<" "<<st[nodo]<<endl;
+		
 	}
 	
 	if(ini>y || fn<x){
@@ -120,7 +127,7 @@ int main() {
 		for(int i=1;i<=m;i++){
 			cin>>s>>aux;
 			
-			n+=aux.size()*m;
+			n+=aux.size()*s;
 			
 			for(int j=1;j<=s;j++){
 				for(int a=0;a<aux.size();a++){
@@ -147,10 +154,12 @@ int main() {
 			cin>>tipo>>aux1>>aux2;
 			
 			if(tipo!='S'){
+				cout<<tipo<<" "<<aux1<<" "<<aux2<<endl;
 				lzy(1,0,n-1,aux1,aux2,tipo);
 				
 			}else{
-				cout<<"Q"<<cont++<<": "<<query(1,0,n-1,aux1,aux2)<<'\n';
+				query(1,0,n-1,aux1,aux2);
+				cout<<"Q"<<cont++<<": "<<'\n';
 				
 			}
 			
@@ -160,3 +169,4 @@ int main() {
 	
 	return 0;
 }
+ 
