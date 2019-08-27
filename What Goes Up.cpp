@@ -2,7 +2,6 @@
 using namespace std;
 
 int n,cont,mx,ant;
-vector<string> rs;
 
 bool vis[10000002];
 int arr[10000002];
@@ -10,6 +9,8 @@ int res[10000002];
 int st[20000002];
 long long int org[10000002];
 pair<long long int,int> num[10000002];
+
+vector<string> rs;
 
 int query(int nodo,int ini,int fn,int x,int y){
 	if(ini>y || fn<x){
@@ -24,16 +25,16 @@ int query(int nodo,int ini,int fn,int x,int y){
 	
 }
 
-void update(int nodo,int ini,int fn,int x,int val){
+int update(int nodo,int ini,int fn,int x,int val){
 	if(ini==x && fn==x){
 		return st[nodo]=val;
 		
-	}else if(x>fn || x<ini)
+	}else if(fn<x || ini>x){
 		return st[nodo];
 	
 	}
 	
-	st[nodo]=max(update(nodo*2,ini,(ini+fn)/2,x,val),update(nodo*2+1,(ini+fn)/2+1,fn,x,,val));
+	return st[nodo]=max(update(nodo*2,ini,(ini+fn)/2,x,val),update(nodo*2+1,(ini+fn)/2+1,fn,x,val));
 	
 }
 
@@ -42,10 +43,10 @@ int main(){
 	while(cin>>num[++n].first){
 		num[n].second=n;
 		org[n]=num[n].first;
-		cout<<num[n].first<<" ";
+		//cout<<num[n].first<<" ";
 		
 	}
-	cout<<endl;
+	//cout<<endl;
 	
 	n--;
 	
@@ -68,40 +69,46 @@ int main(){
 	}
 	cout<<endl;*/
 	
+	int val;
+	
 	for(int i=1;i<=n;i++){
-		mx=max(mx,(res[i]=query(1,n,1,arr[i]-1)+1));
+		val=query(1,1,n,1,max(arr[i]-1,1))+1;
 		
-		cout<<res[i]<<" ";
- 
-		update(arr[i]);
+		mx=max(mx,val);
+		res[i]=val;
+		
+		update(1,1,n,arr[i],val);
 		
 	}
 	
-	cout<<endl;
+	int i=n;
+	
+	while(res[i]!=mx){
+		i--;
+		
+	}
+	ant=i;
+	rs.push_back(to_string(org[i]));
+	
+	for(;i>=1;i--){
+		//cout<<ant<<" "<<i<<" "<<res[i]<<" "<<arr[i]<<" "<<res[ant];
+		if(res[i]==(res[ant]-1) && arr[i]<arr[ant]){
+			//cout<<"-----";
+			rs.push_back(to_string(org[i]));
+			ant=i;
+
+		}
+		//cout<<endl;
+		
+	}
 	
 	cout<<mx<<endl<<'-'<<endl;
 	
-	int i=n;
-
-while(res[i]!=mx){
- i--;
- 
-}
-ant=i--;
-rs.push_back(to_string(org[ant]));
-
-for(;i>=1;i--){
- if(res[i]==(res[ant]-1) && arr[i]<arr[ant]){
-  rs.push_back(to_string(org[i]));
-  ant=i;
- 
- }
+	for(int i=rs.size()-1;i>=0;i--){
+		cout<<rs[i]<<endl;
+		
+	}
 	
-}
-
-for(int i=rs.size()-1;i>=0;i--){
- cout<<rs[i]<<'\n';
- 
-}
+	return 0;
 
 }
